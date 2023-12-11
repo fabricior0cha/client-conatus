@@ -1,0 +1,277 @@
+<div class="h-screen w-screen flex">
+  <div class="h-full  w-full p-4 md:w-6 md:p-8 flex justify-content-center align-items-center">
+    <form [formGroup]="form" class="w-full md:w-7" (submit)="nextStep()">
+      <div *ngIf="step == 0" formGroupName="usuario">
+        <div class="mb-5">
+          <h2 class="text-900 text-2xl text-center font-medium mb-3">
+            Comece a usar hoje!
+          </h2>
+          <p class="text-600 text-center font-medium">
+            Uma nova forma de gerenciar seu negócio, use oque precisar quando
+            quiser.
+          </p>
+        </div>
+        <div class="field p-fluid mb-3">
+          <input
+            pInputText
+            id="nome"
+            placeholder="Nome"
+            formControlName="nome"
+            aria-describedby="nome-help"
+            class="w-full"
+          />
+          <small
+            *ngIf="isFieldValid('usuario.nome')"
+            id="nome-help"
+            class="p-error"
+            >Campo obrigatório</small
+          >
+        </div>
+
+        <div class="field p-fluid mb-3">
+          <input
+            pInputText
+            id="email"
+            placeholder="E-mail"
+            formControlName="email"
+            aria-describedby="email-help"
+            class="w-full"
+          />
+          <div *ngIf="isFieldValid('usuario.email')">
+            <small
+              *ngIf="email?.errors?.['email']"
+              id="nome-help"
+              class="p-error"
+              >Insira um e-mail válido</small
+            >
+            <small
+              *ngIf="email?.errors?.['required']"
+              id="nome-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+        </div>
+        <div class="field p-fluid mb-3">
+          <input
+            pInputText
+            id="password"
+            placeholder="Crie uma senha"
+            formControlName="senha"
+            aria-describedby="password-help"
+            class="w-full"
+          />
+          <small
+            *ngIf="isFieldValid('usuario.senha')"
+            id="password-help"
+            class="p-error"
+            >Campo obrigatório</small
+          >
+        </div>
+
+        <p class="text-600 font-light w-full text-center text-sm m-0 mb-5">
+          Ao prosseguir, você concorda e tem ciência dos Termos de Uso e
+          Políticas de Privacidade do Conatus.
+        </p>
+        <button
+          pButton
+          pRipple
+          label="Testar gratuitamente"
+          class="w-full mb-3"
+          type="submit"
+          [disabled]="!form.valid"
+        ></button>
+        <div>
+          <p class="text-500 font-semibold- w-full text-center m-0 mb-5">
+            Já tem uma conta?
+            <a href="/login" class="text-500 text-blue-400">Entrar</a>
+          </p>
+        </div>
+      </div>
+      <div *ngIf="step == 1" formGroupName="usuario">
+        <div class="mb-5">
+          <h2 class="text-900 text-2xl text-center font-medium mb-3">
+            Preencha dados de contato e informações de cadastro
+          </h2>
+          <p class="text-600 text-center font-medium">
+            Dados para contato e informações de cadastro.
+          </p>
+          <div class="field p-fluid mb-3">
+            <input
+              pInputText
+              id="telefone"
+              placeholder="Celular"
+              formControlName="telefone"
+              aria-describedby="celular-help"
+              class="w-full"
+              mask="(00) 00000-0000"
+            />
+            <small
+              *ngIf="isFieldValid('usuario.telefone')"
+              id="password-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+          <div class="field p-fluid mb-3">
+            <input
+              pInputText
+              id="cpf"
+              placeholder="CPF"
+              formControlName="cpf"
+              aria-describedby="cpf-help"
+              class="w-full"
+              mask="000.000.000-00"
+            />
+            <div *ngIf="isFieldValid('usuario.cpf')">
+              <small
+                *ngIf="cpf?.errors?.['cpfNotValid']"
+                id="nome-help"
+                class="p-error"
+                >Insira um cpf válido</small
+              >
+              <small
+                *ngIf="cpf?.errors?.['required']"
+                id="nome-help"
+                class="p-error"
+                >Campo obrigatório</small
+              >
+            </div>
+          </div>
+          <div class="field p-fluid mb-3">
+            <div class="w-full">
+              <p-dropdown
+                [options]="listGender"
+                optionLabel="descricao"
+                optionValue="id"
+                [showClear]="true"
+                formControlName="idGenero"
+                placeholder="Selecione o seu gênero"
+                [style]="{ width: '100%' }"
+              ></p-dropdown>
+            </div>
+            <small
+              *ngIf="isFieldValid('usuario.idGenero')"
+              id="password-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+
+          <button
+            pButton
+            pRipple
+            label="Avançar"
+            icon="pi pi-user"
+            class="w-full mb-3"
+            type="submit"
+            [disabled]="!form.valid"
+          ></button>
+        </div>
+      </div>
+      <div *ngIf="step == 2" formGroupName="pessoaJuridica">
+        <div class="mb-5">
+          <h2 class="text-900 text-2xl text-center font-medium mb-3">
+            Preencha os dados da sua empresa
+          </h2>
+          <p class="text-600 text-center font-medium">
+            Insira os dados da sua empresa para começar a usar o Conatus.
+          </p>
+          <div class="field p-fluid mb-3">
+            <input
+              pInputText
+              id="razaoSocial"
+              placeholder="Razão social"
+              aria-describedby="razao-help"
+              class="w-full"
+              formControlName="razaoSocial"
+            />
+            <small
+              *ngIf="isFieldValid('pessoaJuridica.razaoSocial')"
+              id="password-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+          <div class="field p-fluid mb-3">
+            <input
+              pInputText
+              id="cnpj"
+              placeholder="CNPJ"
+              aria-describedby="cnpj-help"
+              class="w-full"
+              formControlName="cnpj"
+              mask="00.000.000/0000-00"
+            />
+
+            <div *ngIf="isFieldValid('pessoaJuridica.cnpj')">
+              <small
+                *ngIf="cnpj?.errors?.['cnpjNotValid']"
+                id="nome-help"
+                class="p-error"
+                >Insira um CNPJ válido</small
+              >
+              <small
+                *ngIf="cnpj?.errors?.['required']"
+                id="nome-help"
+                class="p-error"
+                >Campo obrigatório</small
+              >
+            </div>
+          </div>
+          <div class="field p-fluid mb-3">
+            <input
+              pInputText
+              id="nomeFantasia"
+              placeholder="Nome fantasia"
+              aria-describedby="nomeFantasia-help"
+              class="w-full"
+              formControlName="nomeFantasia"
+            />
+            <small
+              *ngIf="isFieldValid('pessoaJuridica.nomeFantasia')"
+              id="password-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+
+          <div class="field p-fluid mb-3">
+            <div class="w-full">
+              <p-dropdown
+                [options]="listDepartment"
+                optionLabel="descricao"
+                [showClear]="true"
+                placeholder="Selecione o departamento"
+                [style]="{ width: '100%' }"
+                formControlName="idRamoAtividade"
+                optionValue="id"
+              ></p-dropdown>
+            </div>
+            <small
+              *ngIf="isFieldValid('pessoaJuridica.idRamoAtividade')"
+              id="password-help"
+              class="p-error"
+              >Campo obrigatório</small
+            >
+          </div>
+
+          <button
+            pButton
+            pRipple
+            label="Finalizar cadastro"
+            icon="pi pi-user"
+            class="w-full mb-3"
+            type="submit"
+            [disabled]="!form.valid"
+          ></button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    class="md:h-full md:w-6 bg-no-repeat bg-cover"
+    style="background-image: url('assets/images/bg-industry.jpg')"
+  ></div>
+</div>
+<p-toast></p-toast>
