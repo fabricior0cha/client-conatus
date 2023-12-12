@@ -12,7 +12,7 @@ export class DominioService {
 
   public getDomainByCode(code: string): Observable<Dominio[]> {
     return this.httpClient.get<Dominio[]>(
-      environment.apiUrl + `/dominios/tipos-codigos/${code}`
+      environment.apiUrl + `/conatus-adm/dominios/tipos-codigos/${code}`
     );
   }
 }

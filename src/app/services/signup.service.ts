@@ -12,7 +12,7 @@ export class SignupService {
 
   public signup(tenant: Tenant): Observable<any> {
     return this.httpClient.post<Tenant>(
-      environment.apiUrl + `/tenants`,
+      environment.apiUrl + `/conatus-adm/tenants`,
       tenant
     );
   }
