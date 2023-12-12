@@ -47,7 +47,9 @@ jobs:
 
       - name: Create directory in GCE
         if: github.event.pull_request.merged == true
-        run:  gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+        run:  |
+         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/*" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
       - name: Deploy package to GCE
         if: github.event.pull_request.merged == true
@@ -63,7 +65,6 @@ jobs:
         if: github.event.pull_request.merged == true
         run: |
          VERSION=$(node -p "require('./package.json').version")
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/*" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo tar -xzf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz -C /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
