@@ -66,9 +66,9 @@ jobs:
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/*" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo tar -xzf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz -C /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mv /etc/dev/client-conatus/client-conatus-${VERSION}/client-conatus/* /etc/dev/client-conatus/" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
       - name: Comentar no PR
         if: github.event.pull_request.merged == true
