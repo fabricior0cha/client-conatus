@@ -12,12 +12,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { FilterSupplierComponent } from './pages/filter-supplier/filter-supplier.component';
 
 @NgModule({
-  declarations: [AppComponent, SignupComponent],
+  declarations: [AppComponent, SignupComponent, FilterSupplierComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -32,6 +34,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     NgxMaskDirective,
     NgxMaskPipe,
     ToastModule,
+    TableModule,
   ],
   providers: [
     MessageService,
