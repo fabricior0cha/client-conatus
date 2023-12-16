@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Pageable } from 'src/app/model/pageable';
+import { Supplier } from 'src/app/model/supplier';
+import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
   selector: 'app-filter-supplier',
   templateUrl: './filter-supplier.component.html',
   styleUrls: ['./filter-supplier.component.scss'],
 })
-export class FilterSupplierComponent {
-  suppliers = [
-    {
-      nome: 'Fornecedor 1',
-      dataAtualizacao: '2023-12-15T01:00:02.841Z',
-    },
-    {
-      nome: 'Fornecedor 2',
-      dataAtualizacao: '2023-12-15T01:00:02.841Z',
-    },
-  ];
+export class FilterSupplierComponent implements OnInit {
+  public suppliers: Pageable<Supplier>;
+
+  constructor(private supplierService: SupplierService) {}
+
+  ngOnInit(): void {
+    this.supplierService.getSuppliers().subscribe((data) => {
+      this.suppliers = data;
+    });
+  }
 }
