@@ -13,13 +13,20 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
+import { SidebarModule } from 'primeng/sidebar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FilterSupplierComponent } from './pages/filter-supplier/filter-supplier.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
-  declarations: [AppComponent, SignupComponent, FilterSupplierComponent],
+  declarations: [
+    AppComponent,
+    SignupComponent,
+    FilterSupplierComponent,
+    SidebarComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -35,6 +42,7 @@ import { FilterSupplierComponent } from './pages/filter-supplier/filter-supplier
     NgxMaskPipe,
     ToastModule,
     TableModule,
+    SidebarModule,
   ],
   providers: [
     MessageService,
