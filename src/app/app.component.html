@@ -1,6 +1,21 @@
-<div class="h-screen w-screen flex">
-  <app-sidebar></app-sidebar>
-  <div class="w-10 h-screen">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+<p-menubar
+  [model]="menuItems"
+  styleClass="bg-white border-none border-bottom-1"
+>
+  <ng-template pTemplate="start">
+    <img src="/assets/images/conatus-logo.png" height="40" class="mr-2" />
+  </ng-template>
+  <ng-template pTemplate="end">
+    <div class="flex align-items-center">
+      <p-avatar label="P" styleClass="mr-2"></p-avatar>
+      <p-button
+        icon="pi pi-sign-out"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary "
+      ></p-button>
+    </div>
+  </ng-template>
+</p-menubar>
+
+<router-outlet></router-outlet>

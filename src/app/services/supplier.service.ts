@@ -22,4 +22,17 @@ export class SupplierService {
       }
     );
   }
+
+  createSupplier(supplier: Supplier): Observable<any> {
+    return this.httpClient.post<any>(
+      environment.apiUrl + '/conatus-core/fornecedores',
+      supplier,
+      {
+        headers: new HttpHeaders().set(
+          'tenant',
+          'a7efdd20-e12b-48fe-81fe-0b109db5da95'
+        ),
+      }
+    );
+  }
 }
