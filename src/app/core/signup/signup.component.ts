@@ -1,36 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { Dominio } from '../model/dominio';
-import { DominioService } from '../services/dominio.service';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { Tenant } from '../model/tenant';
-import { SignupService } from '../services/signup.service';
-import { GenericValidator } from '../utils/genericValidator';
-import { MessageService } from 'primeng/api';
-import { catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { SignupService } from '../services/signup.service';
+import { Domain } from '../models/domain.model';
+import { DomainService } from '../services/domain.service';
+import { GenericValidator } from 'src/app/shared/utils/genericValidator';
+import { Tenant } from '../models/tenant.model';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
   public step: number = 0;
 
   public form: FormGroup;
 
-  public listGender: Dominio[] = [];
+  public listGender: Domain[] = [];
 
-  public listDepartment: Dominio[] = [];
+  public listDepartment: Domain[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private dominioService: DominioService,
+    private dominioService: DomainService,
     private signupService: SignupService,
     private messageService: MessageService
   ) {}

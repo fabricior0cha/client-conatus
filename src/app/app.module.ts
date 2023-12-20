@@ -4,10 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SignupComponent } from './signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { FilterSupplierComponent } from './pages/filter-supplier/filter-supplier.component';
 
 // Import PrimeNG modules
 import { AccordionModule } from 'primeng/accordion';
@@ -94,8 +92,16 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageService } from 'primeng/api';
+import { SignupComponent } from './core/signup/signup.component';
+import { SupplierComponent } from './features/supplier/supplier.component';
+import { MenuComponent } from './core/layout/menu.component';
 @NgModule({
-  declarations: [AppComponent, SignupComponent, FilterSupplierComponent],
+  declarations: [
+    AppComponent,
+    SignupComponent,
+    SupplierComponent,
+    MenuComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

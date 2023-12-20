@@ -1,21 +1,2 @@
-<p-menubar
-  [model]="menuItems"
-  styleClass="bg-white border-none border-bottom-1"
->
-  <ng-template pTemplate="start">
-    <img src="/assets/images/conatus-logo.png" height="40" class="mr-2" />
-  </ng-template>
-  <ng-template pTemplate="end">
-    <div class="flex align-items-center">
-      <p-avatar label="P" styleClass="mr-2"></p-avatar>
-      <p-button
-        icon="pi pi-sign-out"
-        [rounded]="true"
-        [text]="true"
-        severity="secondary "
-      ></p-button>
-    </div>
-  </ng-template>
-</p-menubar>
-
+<app-menu></app-menu>
 <router-outlet></router-outlet>
