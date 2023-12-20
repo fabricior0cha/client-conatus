@@ -3,16 +3,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Paginator, PaginatorState } from 'primeng/paginator';
+import { Category } from 'src/app/core/models/category.model';
 import { Pageable } from 'src/app/core/models/pageable.model';
-import { Supplier } from 'src/app/core/models/supplier.model';
-import { SupplierService } from 'src/app/core/services/supplier.service';
+import { CategoryService } from 'src/app/core/services/category.service';
 
 @Component({
-  selector: 'app-supplier',
-  templateUrl: './supplier.component.html',
+  selector: 'app-category',
+  templateUrl: './category.component.html',
 })
-export class SupplierComponent implements OnInit {
-  public suppliers: Pageable<Supplier>;
+export class CategoryComponent implements OnInit {
+  public categories: Pageable<Category>;
 
   public visibleModal: boolean = false;
 
@@ -26,17 +26,17 @@ export class SupplierComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private supplierService: SupplierService,
+    private categoryService: CategoryService,
     private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-    this.supplierService.getSuppliers(0, 5).subscribe((data) => {
-      this.suppliers = data;
+    this.categoryService.getCategories(0, 5).subscribe((data) => {
+      this.categories = data;
     });
     this.form = this.fb.group({
       id: [''],
-      nome: [''],
+      descricao: [''],
     });
   }
 
@@ -45,22 +45,22 @@ export class SupplierComponent implements OnInit {
     this.visibleModal = true;
   }
 
-  public openModalToUpdate(supplier: Supplier): void {
+  public openModalToUpdate(category: Category): void {
     this.visibleModal = true;
-    this.form.patchValue(supplier);
+    this.form.patchValue(category);
   }
 
-  public saveSupplier(): void {
+  public saveCategory(): void {
     if (this.form.get('id')?.value) {
-      this.supplierService.updateSupplier(this.form.value).subscribe(
+      this.categoryService.updateCategory(this.form.value).subscribe(
         (data) => {
           this.visibleModal = false;
           this.showSucess('Cadastro atualizado com sucesso');
           this.form = this.fb.group({
             id: [''],
-            nome: [''],
+            descricao: [''],
           });
-          this.supplierService.getSuppliers(0, 5).subscribe((data) => {
+          this.categoryService.getCategories(0, 5).subscribe((data) => {
             this.paginator.changePage(data.totalPages - 1);
           });
         },
@@ -71,17 +71,17 @@ export class SupplierComponent implements OnInit {
       return;
     }
 
-    this.supplierService.createSupplier(this.form.value).subscribe(
+    this.categoryService.createCategory(this.form.value).subscribe(
       (data) => {
         this.visibleModal = false;
         this.showSucess();
-        this.supplierService.getSuppliers(0, 5).subscribe((data) => {
-          this.suppliers = data;
+        this.categoryService.getCategories(0, 5).subscribe((data) => {
+          this.categories = data;
           this.paginator.changePage(data.totalPages - 1);
         });
         this.form = this.fb.group({
           id: [''],
-          nome: [''],
+          descricao: [''],
         });
       },
       (err: HttpErrorResponse) => {
@@ -107,10 +107,10 @@ export class SupplierComponent implements OnInit {
   }
 
   public onPageChange(event: PaginatorState): void {
-    this.supplierService
-      .getSuppliers(event.page, event.rows)
+    this.categoryService
+      .getCategories(event.page, event.rows)
       .subscribe((data) => {
-        this.suppliers = data;
+        this.categories = data;
       });
   }
 }

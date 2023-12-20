@@ -95,12 +95,14 @@ import { MessageService } from 'primeng/api';
 import { SignupComponent } from './core/signup/signup.component';
 import { SupplierComponent } from './features/supplier/supplier.component';
 import { MenuComponent } from './core/layout/menu.component';
+import { CategoryComponent } from './features/category/category.component';
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
     SupplierComponent,
     MenuComponent,
+    CategoryComponent,
   ],
   imports: [
     BrowserModule,
