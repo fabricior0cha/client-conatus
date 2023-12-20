@@ -17,6 +17,12 @@ export class MenuComponent implements OnInit {
           {
             label: 'Fornecedor',
             icon: 'pi pi-fw pi-box',
+            routerLink: '/fornecedores',
+          },
+          {
+            label: 'Categoria',
+            icon: 'pi pi-fw pi-tags',
+            routerLink: '/categorias',
           },
         ],
       },

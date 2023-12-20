@@ -1,9 +1,9 @@
 <div class="flex flex-column p-3 md:p-8">
   <div class="flex justify-content-between align-content-center">
     <div class="flex flex-column gap-2">
-      <h2 class="text-3xl font-bold m-0">Fornecedores</h2>
+      <h2 class="text-3xl font-bold m-0">Categorias</h2>
       <p class="text-md font-bold text-gray-600 m-0">
-        {{ suppliers.content ? suppliers.totalElements : 0 }} encontrados
+        {{ categories.content ? categories.totalElements : 0 }} encontrados
       </p>
     </div>
     <p-button
@@ -19,29 +19,29 @@
     ></p-button>
   </div>
   <p-table
-    [value]="suppliers.content"
+    [value]="categories.content"
     [tableStyle]="{ 'min-width': '50rem' }"
     onPageChange="onPageChange($event)"
     class="pt-8"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 25%">Nome</th>
+        <th style="width: 25%">Descrição</th>
         <th style="width: 25%">Data de atualização</th>
         <th style="width: 5%"></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-supplier>
+    <ng-template pTemplate="body" let-category>
       <tr>
-        <td>{{ supplier.nome }}</td>
-        <td>{{ supplier.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
+        <td>{{ category.descricao }}</td>
+        <td>{{ category.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
         <td>
           <button
             type="button"
             pButton
             pRipple
             icon="pi pi-pencil"
-            (click)="openModalToUpdate(supplier)"
+            (click)="openModalToUpdate(category)"
           ></button>
         </td>
       </tr>
@@ -50,30 +50,28 @@
   <p-paginator
     #paginator
     [rows]="rows"
-    [totalRecords]="suppliers.totalElements"
+    [totalRecords]="categories.totalElements"
     [rowsPerPageOptions]="[5, 10, 20]"
     (onPageChange)="onPageChange($event)"
   ></p-paginator>
 </div>
 
 <p-dialog
-  [header]="
-    this.form.get('id')?.value ? 'Alterar fornecedor' : 'Cadastrar fornecedor'
-  "
+  [header]="this.form.get('id')?.value ? 'Alterar categoria' : 'Cadastrar categoria'"
   [(visible)]="visibleModal"
   [modal]="true"
   styleClass="md:w-6"
   [draggable]="false"
   [resizable]="false"
 >
-  <form [formGroup]="form" (submit)="saveSupplier()">
+  <form [formGroup]="form" (submit)="saveCategory()">
     <div class="field p-fluid mb-3">
       <input
         pInputText
-        id="nome"
-        placeholder="Nome do fornecedor"
-        formControlName="nome"
-        aria-describedby="nome-help"
+        id="descricao"
+        placeholder="Descrição da categoria"
+        formControlName="descricao"
+        aria-describedby="descricao-help"
         class="w-full"
       />
     </div>
