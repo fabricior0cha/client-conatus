@@ -2,7 +2,9 @@
   <div class="flex justify-content-between align-content-center">
     <div class="flex flex-column gap-2">
       <h2 class="text-3xl font-bold m-0">Fornecedores</h2>
-      <p class="text-md font-bold text-gray-600 m-0">2 encontrados</p>
+      <p class="text-md font-bold text-gray-600 m-0">
+        {{ suppliers.content ? suppliers.totalElements : 0 }} encontrados
+      </p>
     </div>
     <p-button
       class="hidden md:block"
@@ -18,28 +20,40 @@
   </div>
   <p-table
     [value]="suppliers.content"
-    [paginator]="true"
-    [rows]="5"
-    [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
-    currentPageReportTemplate=""
-    [rowsPerPageOptions]="[5, 10, 20]"
-    styleClass="p-datatable-gridlines"
+    onPageChange="onPageChange($event)"
     class="pt-8"
   >
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 25%">Nome</th>
         <th style="width: 25%">Data de atualização</th>
+        <th style="width: 5%"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-supplier>
       <tr>
         <td>{{ supplier.nome }}</td>
         <td>{{ supplier.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
+        <td>
+          <button
+            type="button"
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            (click)="openModalToUpdate(supplier)"
+          ></button>
+        </td>
       </tr>
     </ng-template>
   </p-table>
+  <p-paginator
+    #paginator
+    [rows]="rows"
+    [totalRecords]="suppliers.totalElements"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
 </div>
 
 <p-dialog

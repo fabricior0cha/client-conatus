@@ -1,4 +1,4 @@
-export class Dominio {
+export class Domain {
   id: number;
   codigo: string;
   descricao: string;

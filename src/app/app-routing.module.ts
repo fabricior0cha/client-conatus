@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FilterSupplierComponent } from './pages/filter-supplier/filter-supplier.component';
-import { SignupComponent } from './signup/signup.component';
+import { SupplierComponent } from './features/supplier/supplier.component';
 
 const routes: Routes = [
   {
@@ -11,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'fornecedores',
-    component: FilterSupplierComponent,
+    component: SupplierComponent,
   },
 ];
 
