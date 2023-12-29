@@ -3,7 +3,7 @@
     <div class="flex flex-column gap-2">
       <h2 class="text-3xl font-bold m-0">Fornecedores</h2>
       <p class="text-md font-bold text-gray-600 m-0">
-        {{ suppliers.content ? suppliers.totalElements : 0 }} encontrados
+        {{ data.content ? data.totalElements : 0 }} encontrados
       </p>
     </div>
     <p-button
@@ -19,7 +19,7 @@
     ></p-button>
   </div>
   <p-table
-    [value]="suppliers.content"
+    [value]="data.content"
     [tableStyle]="{ 'min-width': '50rem' }"
     onPageChange="onPageChange($event)"
     class="pt-8"
@@ -50,7 +50,7 @@
   <p-paginator
     #paginator
     [rows]="rows"
-    [totalRecords]="suppliers.totalElements"
+    [totalRecords]="data.totalElements"
     [rowsPerPageOptions]="[5, 10, 20]"
     (onPageChange)="onPageChange($event)"
   ></p-paginator>
@@ -66,7 +66,7 @@
   [draggable]="false"
   [resizable]="false"
 >
-  <form [formGroup]="form" (submit)="saveSupplier()">
+  <form [formGroup]="form" (submit)="onSubmit()">
     <div class="field p-fluid mb-3">
       <label for="nome">Nome do fornecedor</label>
       <input

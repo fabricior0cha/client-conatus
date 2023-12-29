@@ -3,7 +3,7 @@
     <div class="flex flex-column gap-2">
       <h2 class="text-3xl font-bold m-0">Produtos</h2>
       <p class="text-md font-bold text-gray-600 m-0">
-        {{ products.content ? products.totalElements : 0 }} encontrados
+        {{ data.content ? data.totalElements : 0 }} encontrados
       </p>
     </div>
     <p-button
@@ -19,7 +19,7 @@
     ></p-button>
   </div>
   <p-table
-    [value]="products.content"
+    [value]="data.content"
     [tableStyle]="{ 'min-width': '50rem' }"
     onPageChange="onPageChange($event)"
     class="pt-8"
@@ -58,7 +58,7 @@
   <p-paginator
     #paginator
     [rows]="rows"
-    [totalRecords]="products.totalElements"
+    [totalRecords]="data.totalElements"
     [rowsPerPageOptions]="[5, 10, 20]"
     (onPageChange)="onPageChange($event)"
   ></p-paginator>
@@ -74,7 +74,7 @@
   [draggable]="false"
   [resizable]="false"
 >
-  <form [formGroup]="form" (submit)="submit()">
+  <form [formGroup]="form" (submit)="onSubmit()">
     <div class="grid">
       <div class="col-12 md:col-6">
         <div class="field p-fluid mb-3">
@@ -102,6 +102,7 @@
             [thousandSeparator]="'.'"
             [decimalMarker]="','"
             prefix="R$ "
+            maxlength="10"
           />
         </div>
       </div>
