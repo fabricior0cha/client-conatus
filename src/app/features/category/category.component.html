@@ -66,10 +66,10 @@
 >
   <form [formGroup]="form" (submit)="saveCategory()">
     <div class="field p-fluid mb-3">
+      <label for="descricao">Descrição da categoria</label>
       <input
         pInputText
         id="descricao"
-        placeholder="Descrição da categoria"
         formControlName="descricao"
         aria-describedby="descricao-help"
         class="w-full"

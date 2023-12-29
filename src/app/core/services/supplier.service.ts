@@ -4,57 +4,19 @@ import { Observable } from 'rxjs';
 import { Pageable } from 'src/app/core/models/pageable.model';
 import { Supplier } from 'src/app/core/models/supplier.model';
 import { environment } from 'src/environments/environment';
+import { BasicResourceService } from './basic-resource.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SupplierService {
-  constructor(private httpClient: HttpClient) {}
+export class SupplierService extends BasicResourceService<Supplier> {
+  constructor(httpClient: HttpClient) {
+    super(httpClient, '/conatus-core/fornecedores');
+  }
 
-  getSuppliers(
-    page: number | undefined,
-    size: number | undefined
-  ): Observable<Pageable<Supplier>> {
-    page = page || 0;
-    size = size || 5;
+  public searchByName(name: string): Observable<Pageable<Supplier>> {
     return this.httpClient.get<Pageable<Supplier>>(
-      environment.apiUrl + '/conatus-core/fornecedores',
-      {
-        params: {
-          page: page.toString(),
-          size: size.toString(),
-        },
-        headers: new HttpHeaders().set(
-          'tenant',
-          'a7efdd20-e12b-48fe-81fe-0b109db5da95'
-        ),
-      }
-    );
-  }
-
-  createSupplier(supplier: Supplier): Observable<any> {
-    return this.httpClient.post<any>(
-      environment.apiUrl + '/conatus-core/fornecedores',
-      supplier,
-      {
-        headers: new HttpHeaders().set(
-          'tenant',
-          'a7efdd20-e12b-48fe-81fe-0b109db5da95'
-        ),
-      }
-    );
-  }
-
-  updateSupplier(supplier: Supplier): Observable<any> {
-    return this.httpClient.put<any>(
-      environment.apiUrl + '/conatus-core/fornecedores/' + supplier.id,
-      supplier,
-      {
-        headers: new HttpHeaders().set(
-          'tenant',
-          'a7efdd20-e12b-48fe-81fe-0b109db5da95'
-        ),
-      }
+      environment.apiUrl + this.serviceUrl + '/nomes?nome=' + name
     );
   }
 }
