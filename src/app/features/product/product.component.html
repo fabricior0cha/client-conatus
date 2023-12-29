@@ -1,0 +1,146 @@
+<div class="flex flex-column p-3 md:p-8">
+  <div class="flex justify-content-between align-content-center">
+    <div class="flex flex-column gap-2">
+      <h2 class="text-3xl font-bold m-0">Produtos</h2>
+      <p class="text-md font-bold text-gray-600 m-0">
+        {{ products.content ? products.totalElements : 0 }} encontrados
+      </p>
+    </div>
+    <p-button
+      class="hidden md:block"
+      label="Cadastrar novo"
+      icon="pi pi-plus"
+      (click)="openModal()"
+    ></p-button>
+    <p-button
+      class="block md:hidden"
+      icon="pi pi-plus"
+      (click)="openModal()"
+    ></p-button>
+  </div>
+  <p-table
+    [value]="products.content"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    onPageChange="onPageChange($event)"
+    class="pt-8"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">Situação</th>
+        <th style="width: 10%">Produto</th>
+        <th style="width: 10%">Fornecedor</th>
+        <th style="width: 10%">Valor</th>
+        <th style="width: 25%">Categorias</th>
+        <th style="width: 10%">Data de atualização</th>
+        <th style="width: 5%"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.situacao }}</td>
+        <td>{{ product.descricao }}</td>
+        <td>{{ product.fornecedor.nome }}</td>
+        <td>{{ getFormattedValue(product) }}</td>
+        <td>{{ getFormattedCategorias(product) }}</td>
+        <td>{{ product.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
+        <td>
+          <button
+            type="button"
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            (click)="openModalToUpdate(product)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-paginator
+    #paginator
+    [rows]="rows"
+    [totalRecords]="products.totalElements"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+</div>
+
+<p-dialog
+  [header]="
+    this.form.get('id')?.value ? 'Alterar produto' : 'Cadastrar produto'
+  "
+  [(visible)]="visibleModal"
+  [modal]="true"
+  styleClass="md:w-8"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="field p-fluid mb-3">
+          <label for="descricao">Descrição</label>
+          <input
+            pInputText
+            id="descricao"
+            formControlName="descricao"
+            aria-describedby="descricao-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="field p-fluid mb-3">
+          <label for="valor">Valor</label>
+          <input
+            pInputText
+            id="valor"
+            formControlName="valor"
+            aria-describedby="valor-help"
+            class="w-full"
+            mask="separator.2"
+            [thousandSeparator]="'.'"
+            [decimalMarker]="','"
+            prefix="R$ "
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="fornecedor">Fornecedor</label>
+          <p-autoComplete
+            id="fornecedor"
+            formControlName="fornecedor"
+            [suggestions]="suppliers"
+            field="nome"
+            emptyMessage="Nenhum fornecedor encontrado"
+            [showEmptyMessage]="suppliers.length === 0"
+            (completeMethod)="searchSuppliers($event)"
+          ></p-autoComplete>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-8">
+        <div class="field p-fluid mb-3">
+          <label for="categorias">Categorias</label>
+          <p-autoComplete
+            id="categorias"
+            formControlName="categorias"
+            [suggestions]="categories"
+            field="descricao"
+            (completeMethod)="searchCategories($event)"
+            [multiple]="true"
+            [showEmptyMessage]="categories.length === 0"
+            emptyMessage="Nenhuma categoria encontrada"
+          ></p-autoComplete>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end">
+      <p-button class="" label="Salvar" type="submit"></p-button>
+    </div>
+  </form>
+</p-dialog>
+<p-toast></p-toast>

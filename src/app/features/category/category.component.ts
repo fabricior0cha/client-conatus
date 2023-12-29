@@ -31,7 +31,7 @@ export class CategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categoryService.getCategories(0, 5).subscribe((data) => {
+    this.categoryService.get({ page: 0, size: 5 }).subscribe((data) => {
       this.categories = data;
     });
     this.form = this.fb.group({
@@ -52,7 +52,7 @@ export class CategoryComponent implements OnInit {
 
   public saveCategory(): void {
     if (this.form.get('id')?.value) {
-      this.categoryService.updateCategory(this.form.value).subscribe(
+      this.categoryService.update(this.form.value).subscribe(
         (data) => {
           this.visibleModal = false;
           this.showSucess('Cadastro atualizado com sucesso');
@@ -60,7 +60,7 @@ export class CategoryComponent implements OnInit {
             id: [''],
             descricao: [''],
           });
-          this.categoryService.getCategories(0, 5).subscribe((data) => {
+          this.categoryService.get({ page: 0, size: 5 }).subscribe((data) => {
             this.paginator.changePage(data.totalPages - 1);
           });
         },
@@ -71,11 +71,11 @@ export class CategoryComponent implements OnInit {
       return;
     }
 
-    this.categoryService.createCategory(this.form.value).subscribe(
+    this.categoryService.create(this.form.value).subscribe(
       (data) => {
         this.visibleModal = false;
         this.showSucess();
-        this.categoryService.getCategories(0, 5).subscribe((data) => {
+        this.categoryService.get({ page: 0, size: 5 }).subscribe((data) => {
           this.categories = data;
           this.paginator.changePage(data.totalPages - 1);
         });
@@ -108,7 +108,7 @@ export class CategoryComponent implements OnInit {
 
   public onPageChange(event: PaginatorState): void {
     this.categoryService
-      .getCategories(event.page, event.rows)
+      .get({ page: event.page, size: event.rows })
       .subscribe((data) => {
         this.categories = data;
       });

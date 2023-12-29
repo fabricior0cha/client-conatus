@@ -68,10 +68,10 @@
 >
   <form [formGroup]="form" (submit)="saveSupplier()">
     <div class="field p-fluid mb-3">
+      <label for="nome">Nome do fornecedor</label>
       <input
         pInputText
         id="nome"
-        placeholder="Nome do fornecedor"
         formControlName="nome"
         aria-describedby="nome-help"
         class="w-full"

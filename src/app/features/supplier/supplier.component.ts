@@ -20,7 +20,7 @@ export class SupplierComponent implements OnInit {
 
   first: number = 0;
 
-  rows: number = 5;
+  rows: number = 10;
 
   @ViewChild('paginator', { static: true }) paginator: Paginator;
 
@@ -31,7 +31,7 @@ export class SupplierComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.supplierService.getSuppliers(0, 5).subscribe((data) => {
+    this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
       this.suppliers = data;
     });
     this.form = this.fb.group({
@@ -52,7 +52,7 @@ export class SupplierComponent implements OnInit {
 
   public saveSupplier(): void {
     if (this.form.get('id')?.value) {
-      this.supplierService.updateSupplier(this.form.value).subscribe(
+      this.supplierService.update(this.form.value).subscribe(
         (data) => {
           this.visibleModal = false;
           this.showSucess('Cadastro atualizado com sucesso');
@@ -60,7 +60,7 @@ export class SupplierComponent implements OnInit {
             id: [''],
             nome: [''],
           });
-          this.supplierService.getSuppliers(0, 5).subscribe((data) => {
+          this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
             this.paginator.changePage(data.totalPages - 1);
           });
         },
@@ -71,11 +71,11 @@ export class SupplierComponent implements OnInit {
       return;
     }
 
-    this.supplierService.createSupplier(this.form.value).subscribe(
+    this.supplierService.create(this.form.value).subscribe(
       (data) => {
         this.visibleModal = false;
         this.showSucess();
-        this.supplierService.getSuppliers(0, 5).subscribe((data) => {
+        this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
           this.suppliers = data;
           this.paginator.changePage(data.totalPages - 1);
         });
@@ -108,7 +108,7 @@ export class SupplierComponent implements OnInit {
 
   public onPageChange(event: PaginatorState): void {
     this.supplierService
-      .getSuppliers(event.page, event.rows)
+      .get({ page: event.page, size: event.rows })
       .subscribe((data) => {
         this.suppliers = data;
       });
