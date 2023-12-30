@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Paginator, PaginatorState } from 'primeng/paginator';
@@ -46,11 +46,11 @@ export class ProductComponent
       this.data = data;
     });
     this.form = this.fb.group({
-      id: [''],
+      id: [null],
       descricao: [''],
-      valor: [''],
-      fornecedor: this.fb.control<Supplier>({} as Supplier),
-      categorias: this.fb.control<Category[]>([]),
+      valor: [null],
+      fornecedor: [{}],
+      categorias: [[]],
     });
   }
 
@@ -98,10 +98,11 @@ export class ProductComponent
     product.id = this.form.get('id')?.value;
     product.descricao = this.form.get('descricao')?.value;
     product.valorUnitario = this.form.get('valor')?.value;
-    product.idFornecedor = this.form.get('fornecedor')?.value?.id;
-    product.categorias = this.form
-      .get('categorias')
-      ?.value?.map((c: Category) => ({ idCategoria: c.id }));
+    product.idFornecedor = this.form.get('fornecedor')?.value?.id ?? null;
+    product.categorias =
+      this.form
+        .get('categorias')
+        ?.value?.map((c: Category) => ({ idCategoria: c.id })) ?? [];
     return product;
   }
 }

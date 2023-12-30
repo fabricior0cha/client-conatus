@@ -34,6 +34,8 @@ export class AbstractBasicFeatureComponent<
   ) {}
 
   public onSubmit = (): void => {
+    if (this.form.invalid) return;
+
     if (this.form.get('id')?.value) {
       this.service.update(this.buildRequest()).subscribe({
         next: () => {
@@ -101,5 +103,9 @@ export class AbstractBasicFeatureComponent<
 
   public buildRequest(): void {
     return this.form.value;
+  }
+
+  public isFieldValid(field: string) {
+    return this.form?.get(field)?.invalid && this.form?.get(field)?.dirty;
   }
 }
