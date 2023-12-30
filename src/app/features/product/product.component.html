@@ -39,7 +39,7 @@
       <tr>
         <td>{{ product.situacao }}</td>
         <td>{{ product.descricao }}</td>
-        <td>{{ product.fornecedor.nome }}</td>
+        <td>{{ product.fornecedor ? product.fornecedor.nome : "Nenhum fornecedor informado" }}</td>
         <td>{{ getFormattedValue(product) }}</td>
         <td>{{ getFormattedCategorias(product) }}</td>
         <td>{{ product.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
