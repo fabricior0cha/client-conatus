@@ -97,6 +97,8 @@ import { SupplierComponent } from './features/supplier/supplier.component';
 import { MenuComponent } from './core/layout/menu.component';
 import { CategoryComponent } from './features/category/category.component';
 import { ProductComponent } from './features/product/product.component';
+import { AbstractBasicFeatureComponent } from './shared/abstract-basic-feature.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +107,7 @@ import { ProductComponent } from './features/product/product.component';
     MenuComponent,
     CategoryComponent,
     ProductComponent,
+    AbstractBasicFeatureComponent,
   ],
   imports: [
     BrowserModule,

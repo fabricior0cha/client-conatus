@@ -3,114 +3,39 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Paginator, PaginatorState } from 'primeng/paginator';
+import { BasicModelResource } from 'src/app/core/models/basic-resource.model';
 import { Pageable } from 'src/app/core/models/pageable.model';
 import { Supplier } from 'src/app/core/models/supplier.model';
 import { SupplierService } from 'src/app/core/services/supplier.service';
+import { AbstractBasicFeatureComponent } from 'src/app/shared/abstract-basic-feature.component';
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
 })
-export class SupplierComponent implements OnInit {
-  public suppliers: Pageable<Supplier>;
-
-  public visibleModal: boolean = false;
-
-  public form: FormGroup;
-
-  first: number = 0;
-
-  rows: number = 10;
-
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
-
+export class SupplierComponent
+  extends AbstractBasicFeatureComponent<
+    Supplier,
+    BasicModelResource<Supplier>,
+    SupplierService
+  >
+  implements OnInit
+{
   constructor(
     private fb: FormBuilder,
     private supplierService: SupplierService,
-    private messageService: MessageService
-  ) {}
+    messageService: MessageService
+  ) {
+    super(messageService, supplierService);
+  }
 
   ngOnInit(): void {
     this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
-      this.suppliers = data;
+      this.data = data;
     });
     this.form = this.fb.group({
       id: [''],
       nome: [''],
     });
-  }
-
-  public openModal(): void {
-    this.form.reset();
-    this.visibleModal = true;
-  }
-
-  public openModalToUpdate(supplier: Supplier): void {
-    this.visibleModal = true;
-    this.form.patchValue(supplier);
-  }
-
-  public saveSupplier(): void {
-    if (this.form.get('id')?.value) {
-      this.supplierService.update(this.form.value).subscribe(
-        (data) => {
-          this.visibleModal = false;
-          this.showSucess('Cadastro atualizado com sucesso');
-          this.form = this.fb.group({
-            id: [''],
-            nome: [''],
-          });
-          this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
-            this.paginator.changePage(data.totalPages - 1);
-          });
-        },
-        (err: HttpErrorResponse) => {
-          this.showErrors(err);
-        }
-      );
-      return;
-    }
-
-    this.supplierService.create(this.form.value).subscribe(
-      (data) => {
-        this.visibleModal = false;
-        this.showSucess();
-        this.supplierService.get({ page: 0, size: 10 }).subscribe((data) => {
-          this.suppliers = data;
-          this.paginator.changePage(data.totalPages - 1);
-        });
-        this.form = this.fb.group({
-          id: [''],
-          nome: [''],
-        });
-      },
-      (err: HttpErrorResponse) => {
-        this.showErrors(err);
-      }
-    );
-  }
-
-  public showSucess(message: string = 'Cadastro realizado com sucesso') {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Successo',
-      detail: message,
-    });
-  }
-
-  public showErrors(err: HttpErrorResponse) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Erro',
-      detail: err?.error?.erros?.map((e: any) => e.detalhe).join('\n'),
-    });
-  }
-
-  public onPageChange(event: PaginatorState): void {
-    this.supplierService
-      .get({ page: event.page, size: event.rows })
-      .subscribe((data) => {
-        this.suppliers = data;
-      });
   }
 }
