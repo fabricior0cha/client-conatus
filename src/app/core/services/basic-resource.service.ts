@@ -30,6 +30,18 @@ export class BasicResourceService<T extends BasicModelResource<T>> {
     );
   }
 
+  public getById(id: number): Observable<T> {
+    return this.httpClient.get<T>(
+      environment.apiUrl + this.serviceUrl + '/' + id,
+      {
+        headers: new HttpHeaders().set(
+          'tenant',
+          'a7efdd20-e12b-48fe-81fe-0b109db5da95'
+        ),
+      }
+    );
+  }
+
   public create(resource: any): Observable<any> {
     return this.httpClient.post<any>(
       environment.apiUrl + this.serviceUrl,

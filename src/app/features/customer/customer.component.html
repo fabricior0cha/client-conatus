@@ -1,0 +1,263 @@
+<div class="flex flex-column p-3 md:p-8">
+  <div class="flex justify-content-between align-content-center">
+    <div class="flex flex-column gap-2">
+      <h2 class="text-3xl font-bold m-0">Clientes</h2>
+      <p class="text-md font-bold text-gray-600 m-0">
+        {{ data ? data.totalElements : 0 }} encontrados
+      </p>
+    </div>
+    <p-button
+      class="hidden md:block"
+      label="Cadastrar novo"
+      icon="pi pi-plus"
+      (click)="openModal()"
+    ></p-button>
+    <p-button
+      class="block md:hidden"
+      icon="pi pi-plus"
+      (click)="openModal()"
+    ></p-button>
+  </div>
+  <p-table
+    [value]="data ? data.content : []"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    onPageChange="onPageChange($event)"
+    class="pt-8"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%">Situação</th>
+        <th style="width: 15%">Nome</th>
+        <th style="width: 25%">CPF</th>
+        <th style="width: 25%">E-mail</th>
+        <th style="width: 25%">Celular</th>
+        <th style="width: 15%">Data de atualização</th>
+        <th style="width: 5%"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-customer>
+      <tr>
+        <td>{{ customer.situacao }}</td>
+        <td>{{ customer.nome }}</td>
+        <td>{{ customer.cpf | mask : "000.000.000-00" }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.celular | mask : "(00) 00000-0000" }}</td>
+        <td>{{ customer.dataAtualizacao | date : "dd/MM/yyyy" }}</td>
+        <td>
+          <button
+            type="button"
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            (click)="openModalToUpdate(customer)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-paginator
+    #paginator
+    [rows]="rows"
+    [totalRecords]="data ? data.totalElements : 0"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    (onPageChange)="onPageChange($event)"
+  ></p-paginator>
+</div>
+
+<p-dialog
+  [header]="
+    this.form.get('id')?.value ? 'Alterar cliente' : 'Cadastrar cliente'
+  "
+  [(visible)]="visibleModal"
+  [modal]="true"
+  styleClass="md:w-8"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form [formGroup]="form" (submit)="onSubmit()">
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="nome">Nome</label>
+          <input
+            pInputText
+            id="nome"
+            formControlName="nome"
+            aria-describedby="nome-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="nome">CPF</label>
+          <input
+            pInputText
+            id="cpf"
+            formControlName="cpf"
+            aria-describedby="cpf-help"
+            class="w-full"
+            mask="000.000.000-00"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="nome">Email</label>
+          <input
+            pInputText
+            id="email"
+            formControlName="email"
+            aria-describedby="email-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="nome">Celular</label>
+          <input
+            pInputText
+            id="celular"
+            formControlName="celular"
+            aria-describedby="celular-help"
+            class="w-full"
+            mask="(00) 00000-0000"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3">
+          <label for="nome">Telefone</label>
+          <input
+            pInputText
+            id="telefone"
+            formControlName="telefone"
+            aria-describedby="telefone-help"
+            class="w-full"
+            mask="(00) 00000-0000"
+          />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="field p-fluid mb-3">
+          <label for="nome">Observação</label>
+          <textarea
+            rows="3"
+            cols="30"
+            pInputTextarea
+            [autoResize]="true"
+            id="observacao"
+            formControlName="observacao"
+            aria-describedby="observacao-help"
+          ></textarea>
+        </div>
+      </div>
+      <div class="col-12">
+        <p-divider></p-divider>
+      </div>
+
+      <div class="col-12 md:col-2">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">CEP</label>
+          <input
+            pInputText
+            id="cep"
+            formControlName="cep"
+            aria-describedby="cep-help"
+            class="w-full"
+            mask="00000-000"
+            (blur)="findByCep()"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">Logradouro</label>
+          <input
+            pInputText
+            id="logradouro"
+            formControlName="logradouro"
+            aria-describedby="logradouro-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-2">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">Numero</label>
+          <input
+            pInputText
+            id="numero"
+            formControlName="numero"
+            aria-describedby="numero-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">Bairro</label>
+          <input
+            pInputText
+            id="bairro"
+            formControlName="bairro"
+            aria-describedby="bairro-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">Complemento</label>
+          <input
+            pInputText
+            id="complemento"
+            formControlName="complemento"
+            aria-describedby="complemento-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3" formGroupName="endereco">
+          <label for="nome">Município</label>
+          <input
+            pInputText
+            id="municipio"
+            formControlName="municipio"
+            aria-describedby="municipio-help"
+            class="w-full"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <div class="field p-fluid mb-3" formGroupName="endereco" s>
+          <label for="nome">UF</label>
+          <input
+            pInputText
+            id="uf"
+            formControlName="uf"
+            aria-describedby="uf-help"
+            class="w-full"
+            mask="SS"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <p-button class="" label="Salvar" type="submit"></p-button>
+    </div>
+  </form>
+</p-dialog>
+<p-toast></p-toast>

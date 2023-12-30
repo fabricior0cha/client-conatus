@@ -58,6 +58,7 @@ export class ProductComponent
     this.visibleModal = true;
     this.form.patchValue({
       ...product,
+      fornecedor: product?.fornecedor?.id ? product.fornecedor : null,
       categorias: product.categorias.map((c) => ({
         id: c.idCategoria,
         descricao: c.descricao,
@@ -67,6 +68,7 @@ export class ProductComponent
   }
 
   public getFormattedCategorias = (product: Product): string => {
+    if (!product.categorias.length) return 'Nenhuma categoria informada';
     return product.categorias.map((c) => c.descricao).join(', ');
   };
 

@@ -98,6 +98,7 @@ import { MenuComponent } from './core/layout/menu.component';
 import { CategoryComponent } from './features/category/category.component';
 import { ProductComponent } from './features/product/product.component';
 import { AbstractBasicFeatureComponent } from './shared/abstract-basic-feature.component';
+import { CustomerComponent } from './features/customer/customer.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { AbstractBasicFeatureComponent } from './shared/abstract-basic-feature.c
     CategoryComponent,
     ProductComponent,
     AbstractBasicFeatureComponent,
+    CustomerComponent,
   ],
   imports: [
     BrowserModule,
