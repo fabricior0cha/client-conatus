@@ -1,85 +1,85 @@
-name: Generate Tag and Deploy to GCE
+# name: Generate Tag and Deploy to GCE
 
-on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
+# on:
+#   pull_request:
+#     types: [closed]
+#     branches:
+#       - main
 
-jobs:
-  deployment:
-    runs-on: ubuntu-latest
+# jobs:
+#   deployment:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
 
-      - name: Config node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          cache: "npm"
+#       - name: Config node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18.x
+#           cache: "npm"
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+#       - name: Install dependencies
+#         run: npm install --legacy-peer-deps
 
-      - name: Config gcloud
-        uses: google-github-actions/setup-gcloud@v0.3.0
-        with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
-          export_default_credentials: true
+#       - name: Config gcloud
+#         uses: google-github-actions/setup-gcloud@v0.3.0
+#         with:
+#           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+#           export_default_credentials: true
 
-      - name: Generate tag
-        if: github.event.pull_request.merged == true
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git tag $VERSION
-          git push origin $VERSION
+#       - name: Generate tag
+#         if: github.event.pull_request.merged == true
+#         run: |
+#           VERSION=$(node -p "require('./package.json').version")
+#           git tag $VERSION
+#           git push origin $VERSION
 
-      - name: Generate build and tar
-        if: github.event.pull_request.merged == true
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          npm run build
-          tar -czf client-conatus-${VERSION}.tar.gz -C dist .
-          ls -lh client-conatus-${VERSION}.tar.gz
+#       - name: Generate build and tar
+#         if: github.event.pull_request.merged == true
+#         run: |
+#           VERSION=$(node -p "require('./package.json').version")
+#           npm run build
+#           tar -czf client-conatus-${VERSION}.tar.gz -C dist .
+#           ls -lh client-conatus-${VERSION}.tar.gz
 
-      - name: Create directory in GCE
-        if: github.event.pull_request.merged == true
-        run:  |
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/*" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#       - name: Create directory in GCE
+#         if: github.event.pull_request.merged == true
+#         run:  |
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/*" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
-      - name: Deploy package to GCE
-        if: github.event.pull_request.merged == true
-        run: |
-         VERSION=$(node -p "require('./package.json').version")
-         gcloud compute scp client-conatus-${VERSION}.tar.gz ${{ secrets.INSTANCE_NAME }}:/etc/dev/client-conatus --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#       - name: Deploy package to GCE
+#         if: github.event.pull_request.merged == true
+#         run: |
+#          VERSION=$(node -p "require('./package.json').version")
+#          gcloud compute scp client-conatus-${VERSION}.tar.gz ${{ secrets.INSTANCE_NAME }}:/etc/dev/client-conatus --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
-      - name: Stop server
-        if: github.event.pull_request.merged == true
-        run: gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo lsof -t -i:4200 | xargs -r sudo kill" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#       - name: Stop server
+#         if: github.event.pull_request.merged == true
+#         run: gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo lsof -t -i:4200 | xargs -r sudo kill" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
-      - name:  Extract package
-        if: github.event.pull_request.merged == true
-        run: |
-         VERSION=$(node -p "require('./package.json').version")
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo tar -xzf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz -C /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mv /etc/dev/client-conatus/client-conatus-${VERSION}/client-conatus/* /etc/dev/client-conatus/" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
-         gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#       - name:  Extract package
+#         if: github.event.pull_request.merged == true
+#         run: |
+#          VERSION=$(node -p "require('./package.json').version")
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mkdir -p /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo tar -xzf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz -C /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}.tar.gz" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo mv /etc/dev/client-conatus/client-conatus-${VERSION}/client-conatus/* /etc/dev/client-conatus/" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
+#          gcloud compute ssh ${{ secrets.INSTANCE_NAME }} --command "sudo rm -rf /etc/dev/client-conatus/client-conatus-${VERSION}" --strict-host-key-checking=no --quiet --zone=${{ secrets.ZONE }} --project=${{ secrets.GCLOUD_PROJECT_ID }}
 
-      - name: Comentar no PR
-        if: github.event.pull_request.merged == true
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 O Pull Request foi implantado com sucesso no ambiente'
-            })
+#       - name: Comentar no PR
+#         if: github.event.pull_request.merged == true
+#         uses: actions/github-script@v6
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           script: |
+#             github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: '🚀 O Pull Request foi implantado com sucesso no ambiente'
+#             })
