@@ -8,4 +8,10 @@ import { MenuItem } from 'primeng/api';
 })
 export class AppComponent {
   title = 'client-conatus';
+
+  public isSidebarExpanded = true;
+
+  public onToggleExpandSidebar() {
+    this.isSidebarExpanded = !this.isSidebarExpanded;
+  }
 }

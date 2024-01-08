@@ -1,7 +1,26 @@
 <div
-  class="sidebar bg-white absolute z-5 border-right-1 border-gray-200 h-sidebar md:min-h-full w-15rem absolute left-0 transition-transform -translate-x-100 md:relative md:translate-x-0 transition-duration-200 animation-ease-in-out"
+  class="sidebar bg-white absolute z-5 border-right-1 border-gray-200 h-sidebar md:min-h-full w-15rem
+  {{
+    isSidebarExpanded ? ' md:w-15rem ' : ' md:w-4rem '
+  }} absolute left-0 transition-transform -translate-x-100 md:relative md:translate-x-0 transition-duration-200 animation-ease-in-out"
 >
   <div class="flex flex-column h-full px-2 py-4">
-    <p-menu [model]="menuItems" styleClass="border-none"></p-menu>
+    <div class="overflow-y-auto">
+      <ul class="list-none p-0 m-0">
+        <li *ngFor="let menu of menuItems">
+          <a
+            pRipple
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-200 transition-duration-150 transition-colors p-ripple no-underline"
+            [routerLinkActive]="['bg-primary-100', 'text-primary-500']"
+            [routerLink]="menu.routerLink"
+          >
+            <i class="{{ menu.icon }} mr-2"></i>
+            <span *ngIf="isSidebarExpanded" class="font-medium">{{
+              menu.label
+            }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

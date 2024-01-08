@@ -11,6 +11,14 @@
         (onClick)="onClick()"
         class="inline-block md:hidden"
       ></p-button>
+      <p-button
+      icon="pi pi-bars"
+      [rounded]="true"
+      [text]="true"
+      severity="secondary"
+      (onClick)="onToggleExpand()"
+      class="hidden md:inline-block"
+    ></p-button>
   </ng-template>
   <ng-template pTemplate="end">
     <div class="flex align-items-center">

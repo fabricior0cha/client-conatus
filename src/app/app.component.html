@@ -1,7 +1,7 @@
 <div class="min-h-screen">
-  <app-menu></app-menu>
+  <app-menu (onToggleExpandSidebar)="onToggleExpandSidebar()"></app-menu>
   <div class="relative md:flex">
-    <app-sidebar></app-sidebar>
+    <app-sidebar [isSidebarExpanded]="isSidebarExpanded"></app-sidebar>
     <div class="flex-1 p-10">
       <router-outlet></router-outlet>
     </div>
